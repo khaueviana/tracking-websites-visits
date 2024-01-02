@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>Consumer.Service.Tests</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\Consumer.Service\Consumer.Service.csproj" />
+    </ItemGroup>
+</Project>

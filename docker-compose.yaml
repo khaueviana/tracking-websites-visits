@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  api:
+    image: tracking-management-api
+    container_name: tracking-management-api
+    build:
+      context: .
+      dockerfile: Dockerfile.Api
+    ports:
+      - 9882:9882
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+
+  service:
+    image: tracking-management-service
+    container_name: tracking-management-service
+    build:
+      context: .
+      dockerfile: Dockerfile.Service
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: tracking-management-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672    # AMQP protocol port
+      - 15672:15672  # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: anyuser
+      RABBITMQ_DEFAULT_PASS: anypass
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq_data:
+    driver: local

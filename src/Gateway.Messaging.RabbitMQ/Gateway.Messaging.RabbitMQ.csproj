@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+	<PackageReference Include="RabbitMQ.Client" Version="6.*" />
+    <ProjectReference Include="..\Infrastructure.CrossCutting\Infrastructure.CrossCutting.csproj" />
+  </ItemGroup>
+</Project>

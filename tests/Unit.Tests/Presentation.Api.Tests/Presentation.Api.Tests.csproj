@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<RootNamespace>Presentation.Api.Tests</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\Presentation.Api\Presentation.Api.csproj" />
+	</ItemGroup>
+</Project>
