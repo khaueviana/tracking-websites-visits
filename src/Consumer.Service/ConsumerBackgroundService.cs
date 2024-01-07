@@ -1,25 +1,30 @@
 ﻿namespace Consumer.Service
 {
-    using Consumer.Service.Dto;
+    using Application.Contracts.Events;
+    using Application.Services.Dto;
+    using Application.Services.Interfaces;
     using Infrastructure.CrossCutting.Interfaces;
     using Microsoft.Extensions.Hosting;
 
-    public class ConsumerBackgroundService(IMessageBroker messageBroker, IMessageBrokerSettings messageBrokerSettings, IFileRepository fileRepository) : BackgroundService
+    public class ConsumerBackgroundService(IMessageBroker messageBroker, IMessageBrokerSettings messageBrokerSettings, ITrackingApplicationService trackingApplicationService) : BackgroundService
     {
         private readonly IMessageBroker messageBroker = messageBroker;
         private readonly IMessageBrokerSettings messageBrokerSettings = messageBrokerSettings;
-        private readonly IFileRepository fileRepository = fileRepository;
+        private readonly ITrackingApplicationService trackingApplicationService = trackingApplicationService;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            this.messageBroker.Consume(async (Tracking tracking) =>
+            this.messageBroker.Consume(async (TrackingCreatedEvent trackingCreatedEvent) =>
             {
-                if (string.IsNullOrWhiteSpace(tracking?.IpAddress))
+                var trackingDto = new TrackingDto
                 {
-                    return;
-                }
+                    Referrer = trackingCreatedEvent.Referrer,
+                    UserAgent = trackingCreatedEvent.UserAgent,
+                    IpAddress = trackingCreatedEvent.IpAddress,
+                    CreatedAt = trackingCreatedEvent.CreatedAt,
+                };
 
-                await this.fileRepository.InsertAsync(tracking.ToString());
+                await this.trackingApplicationService.InsertAsync(trackingDto);
             });
 
             await this.WaitForCancellation(stoppingToken);

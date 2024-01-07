@@ -27,6 +27,7 @@
         }
 
         public void Dispatch<T>(T message)
+            where T : IEvent
         {
             using var channel = this.connection.CreateModel();
 
@@ -42,6 +43,7 @@
         }
 
         public void Consume<T>(Action<T> handler)
+            where T : IEvent
         {
             var channel = this.connection.CreateModel();
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-	<PackageReference Include="RabbitMQ.Client" Version="6.*" />
-	<ProjectReference Include="..\Application.Contracts.Events\Application.Contracts.Events.csproj" />
+    <ProjectReference Include="..\Domain.Model\Domain.Model.csproj" />
+    <ProjectReference Include="..\Application.Contracts.Events\Application.Contracts.Events.csproj" />
     <ProjectReference Include="..\Infrastructure.CrossCutting\Infrastructure.CrossCutting.csproj" />
   </ItemGroup>
 </Project>

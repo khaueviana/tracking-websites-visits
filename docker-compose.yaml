@@ -6,7 +6,8 @@ services:
     container_name: tracking-management-api
     build:
       context: .
-      dockerfile: Dockerfile.Api
+      dockerfile: Dockerfile
+      target: runtime-api
     ports:
       - 9882:9882
     links:
@@ -19,7 +20,8 @@ services:
     container_name: tracking-management-service
     build:
       context: .
-      dockerfile: Dockerfile.Service
+      dockerfile: Dockerfile
+      target: runtime-service
     links:
       - rabbitmq
     depends_on:

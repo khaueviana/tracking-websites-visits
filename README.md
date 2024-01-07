@@ -5,12 +5,26 @@
 Simple solution for tracking website visits.
 
 ## Built With
-- ASP.NET Web API (.NET 8.0)
+- ASP.NET Web API (.NET 8.0).
 - Background Worker: for managing long-running tasks in the Consumer Service.
 - RabbitMQ: robust messaging for applications.
 - XUnit: testing tool for .NET.
 - Moq: flexible mocking framework for unit tests.
 - Fluent Assertions: provides a set of extension methods for more readable assertions.
+
+## Releases
+
+### [Alpha Version](https://github.com/khaueviana/tracking-websites-visits/releases/tag/alpha-version)
+
+* The simplest version following the main requirements.
+
+### [Beta Version](https://github.com/khaueviana/tracking-websites-visits/releases/tag/beta-version)
+
+* A few improvements were added:
+    * An event naming convention should be established along with a base contract named `IEvent`.
+    * Application Service orchestrating the dependencies.
+    * Encapsulate domain rules in the Domain Model layer, including Tracking Summary property and a Factory Method, to create the model correctly (taking the required field into account).
+    * Dockerfile refactoring including multi-stages builds in Docker.
 
 ## Getting Started
 
@@ -66,11 +80,14 @@ A few topics that could be discussed to improve this project:
 
 ### Technical Enhancements
 - ~~Integrate code analysis tools, editor config and directory build properties for better code quality.~~ [DONE]
+- ~~Classical Domain Driven Design: the project is not following the entire DDD structure, but it is prepared for it.~~ [DONE]
+- [MassTransit](https://masstransit.io/documentation/transports/rabbitmq) can be used to manage the RabbitMQ broker rather than the current vanilla version, or even something like the [Kafka Flow](https://github.com/Farfetch/kafkaflow), which is a very good one for Kafka Events.
 - [Renovate Bot](https://docs.renovatebot.com/) can be an option to manage the dependencies version.
 - Input Validation: strengthen input validation mechanisms.
 - Scheduled Events: implement a scheduling service like [Hangfire](https://www.hangfire.io/) for job management and resilience.
 - Retry Patterns: integrate retry patterns for robust event processing.
-- Classical Domain Driven Design: the project is not following the entire DDD structure, but it is prepared for it.
+- Error Handling for both projects.
+- There are many shared components between the API and the Consumer, but we would have distinct solutions in a real-life scenario.
 
 ### Testing
 - Expand Test Coverage: implement unit and integration tests as much as possible.
