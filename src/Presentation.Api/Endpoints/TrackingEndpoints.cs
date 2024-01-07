@@ -1,8 +1,8 @@
 ﻿namespace Presentation.Api.Endpoints
 {
-    using Infrastructure.CrossCutting.Interfaces;
+    using Application.Services.Dto;
+    using Application.Services.Interfaces;
     using Infrastructure.CrossCutting.Media;
-    using Presentation.Api.Dto;
 
     public static class TrackingEndpoints
     {
@@ -13,16 +13,16 @@
                .WithOpenApi();
         }
 
-        public static IResult GetTrackingPixel(HttpContext httpContext, IMessageBroker messageBroker)
+        public static IResult GetTrackingPixel(HttpContext httpContext, ITrackingApplicationService trackingApplicationService)
         {
-            var tracking = new Tracking
+            var tracking = new TrackingDto
             {
                 Referrer = httpContext.Request.Headers.Referer.ToString(),
                 UserAgent = httpContext.Request.Headers.UserAgent.ToString(),
                 IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
             };
 
-            messageBroker.Dispatch(tracking);
+            trackingApplicationService.Dispatch(tracking);
 
             return Results.File(ImageFactory.CreateTransparentGif(), MimeTypeConstants.Gif);
         }

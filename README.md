@@ -12,6 +12,19 @@ Simple solution for tracking website visits.
 - Moq: flexible mocking framework for unit tests.
 - Fluent Assertions: provides a set of extension methods for more readable assertions.
 
+## Releases
+
+### Alpha Version
+
+* The simplest version following the main requirements
+
+### Beta Version
+
+* A few improvements were added:
+ * An event naming convention should be established along with a base contract named `IEvent`.
+ * Application Service orchestrating the dependencies
+ * Encapsulate domain rules in the Domain Model layer, including Tracking Summary and Required Fields.
+
 ## Getting Started
 
 To get a local copy up and running, follow these simple steps.

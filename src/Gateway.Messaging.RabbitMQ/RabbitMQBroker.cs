@@ -2,6 +2,7 @@
 {
     using System.Text;
     using System.Text.Json;
+    using Application.Contracts.Events.Interfaces;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
     using Infrastructure.CrossCutting.Interfaces;
@@ -27,6 +28,7 @@
         }
 
         public void Dispatch<T>(T message)
+            where T : IEvent
         {
             using var channel = this.connection.CreateModel();
 
@@ -42,6 +44,7 @@
         }
 
         public void Consume<T>(Action<T> handler)
+            where T : IEvent
         {
             var channel = this.connection.CreateModel();
 

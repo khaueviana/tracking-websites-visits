@@ -3,6 +3,8 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.*" />
 	<PackageReference Include="RabbitMQ.Client" Version="6.*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
+    <ProjectReference Include="..\Application.Services\Application.Services.csproj" />
+    <ProjectReference Include="..\Gateway.Data.File\Gateway.Data.File.csproj" />
     <ProjectReference Include="..\Gateway.Messaging.RabbitMQ\Gateway.Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\Infrastructure.CrossCutting\Infrastructure.CrossCutting.csproj" />
   </ItemGroup>

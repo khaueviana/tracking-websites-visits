@@ -1,13 +1,15 @@
 ﻿namespace Consumer.Service.Tests
 {
-    using Consumer.Service.Dto;
+    using Application.Contracts.Events;
+    using Application.Services.Dto;
+    using Application.Services.Interfaces;
     using Infrastructure.CrossCutting.Interfaces;
 
     public class ConsumerBackgroundServiceTests
     {
         private readonly Mock<IMessageBroker> messageBrokerMock;
         private readonly Mock<IMessageBrokerSettings> messageBrokerSettingsMock;
-        private readonly Mock<IFileRepository> fileRepositoryMock;
+        private readonly Mock<ITrackingApplicationService> trackingApplicationServiceMock;
         private readonly Fixture fixture;
         private readonly CancellationTokenSource stoppingToken;
 
@@ -15,7 +17,7 @@
         {
             this.messageBrokerMock = new Mock<IMessageBroker>();
             this.messageBrokerSettingsMock = new Mock<IMessageBrokerSettings>();
-            this.fileRepositoryMock = new Mock<IFileRepository>();
+            this.trackingApplicationServiceMock = new Mock<ITrackingApplicationService>();
             this.fixture = new Fixture();
             this.stoppingToken = new CancellationTokenSource();
         }
@@ -24,22 +26,27 @@
         public async Task ExecuteAsync_WithValidTracking_InsertsTrackingInfoToFileRepository()
         {
             // Arrange
-            var tracking = this.fixture.Create<Tracking>();
+            var trackingCreatedEvent = this.fixture.Create<TrackingCreatedEvent>();
+            var trackingDtoInserted = default(TrackingDto);
             var consumerInterval = 1000;
 
             this.messageBrokerSettingsMock.SetupGet(x => x.ConsumerIntervalInMs).Returns(consumerInterval);
 
-            this.messageBrokerMock.Setup(x => x.Consume(It.IsAny<Action<Tracking>>()))
-                                               .Callback<Action<Tracking>>(consumeAction => consumeAction(tracking));
+            this.messageBrokerMock.Setup(x => x.Consume(It.IsAny<Action<TrackingCreatedEvent>>()))
+                                               .Callback<Action<TrackingCreatedEvent>>(consumeAction => consumeAction(trackingCreatedEvent));
 
-            var messageConsumer = new ConsumerBackgroundService(this.messageBrokerMock.Object, this.messageBrokerSettingsMock.Object, this.fileRepositoryMock.Object);
+            this.trackingApplicationServiceMock.Setup(x => x.InsertAsync(It.IsAny<TrackingDto>()))
+                                                .Callback<TrackingDto>(trackingDto => trackingDtoInserted = trackingDto);
+
+            var messageConsumer = new ConsumerBackgroundService(this.messageBrokerMock.Object, this.messageBrokerSettingsMock.Object, this.trackingApplicationServiceMock.Object);
 
             // Act
             var executeAsyncTask = messageConsumer.StartAsync(this.stoppingToken.Token);
             await this.WaitForConsumerToFinish(executeAsyncTask);
 
             // Assert
-            this.fileRepositoryMock.Verify(x => x.InsertAsync(It.Is<string>(s => s.Contains(tracking.IpAddress))), Times.Once());
+            this.trackingApplicationServiceMock.Verify(x => x.InsertAsync(It.IsAny<TrackingDto>()), Times.Once());
+            trackingDtoInserted.Should().BeEquivalentTo(trackingCreatedEvent, o => o.ExcludingMissingMembers());
         }
 
         private async Task WaitForConsumerToFinish(Task executeAsyncTask)

@@ -1,1 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Application.Contracts.Events\Application.Contracts.Events.csproj" />
+  </ItemGroup>
+</Project>
